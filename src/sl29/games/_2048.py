@@ -1,6 +1,7 @@
 """Module providing the logic of the 2048 game"""
 
 import random
+import copy
 from typing import List, Tuple
 
 TAILLE:int = 4
@@ -17,8 +18,11 @@ def nouvelle_partie() -> Tuple[List[List[int]], int]:
     :return: Une grille TAILLExTAILLE initialisée avec deux tuiles, ainsi que le score à 0.
     :rtype: Tuple[List[List[int]], int]
     """
-    raise NotImplementedError("Fonction nouvelle_partie non implémentée.")
-
+    grille = _creer_plateau_vide()
+    grille2 = _ajouter_tuile(grille)
+    grille3 = _ajouter_tuile(grille2)
+    return (grille3, 0)
+    
 def jouer_coup(plateau: List[List[int]], direction: str) -> tuple[List[List[int]], int, bool]:
     """
     Effectuer un mouvement sur le plateau.
@@ -44,13 +48,12 @@ def _creer_plateau_vide() -> List[List[int]]:
     :rtype: List[List[int]]
     """
     grille = []
-    for _ in range (TAILLE):
+    for _ in range(TAILLE):
         ligne = []
         for _ in range(TAILLE):
             ligne.append(0)
         grille.append(ligne)
-    return grille 
-
+    return grille
 
 def _get_cases_vides(plateau: List[List[int]]) -> List[Tuple[int, int]]:
     """
@@ -61,13 +64,15 @@ def _get_cases_vides(plateau: List[List[int]]) -> List[Tuple[int, int]]:
     :return: Une liste de coordonnées
     :rtype: List[Tuple[int, int]]
     """
+
     result = []
     for j in range(len(plateau)):
         for i in range(len(plateau[j])):
             valeur = plateau[j][i]
             if valeur == 0:
-                result.append((j,i))
-    return result 
+                result.append((j, i))
+    return result
+
 
 def _ajouter_tuile(plateau: List[List[int]]) -> List[List[int]]:
     """
@@ -78,7 +83,25 @@ def _ajouter_tuile(plateau: List[List[int]]) -> List[List[int]]:
     :return: Une nouvelle grille avec une tuile ajoutée.
     :rtype: List[List[int]]
     """
-    raise NotImplementedError("Fonction _ajouter_tuile non implémentée.")
+
+    nouveau_plateau = copy.deepcopy(plateau)
+
+    # Récupérer les cases vides
+    cases_vides = _get_cases_vides(nouveau_plateau)
+
+    # S'il n'y a plus de place, on retourne le plateau tel quel
+    if not cases_vides:
+        return nouveau_plateau
+
+    # Choisir une case vide au hasard
+    ligne, colonne = random.choice(cases_vides)
+
+    # Ajouter une tuile (2)
+    nouveau_plateau[ligne][colonne] = 2
+
+    return nouveau_plateau
+
+
 
 def _supprimer_zeros(ligne: List[int]) -> List[int]:
     """
@@ -89,7 +112,12 @@ def _supprimer_zeros(ligne: List[int]) -> List[int]:
     :return: La ligne sans zéros.
     :rtype: List[int]
     """
-    raise NotImplementedError("Fonction _supprimer_zeros non implémentée.")
+
+    result = []
+    for e in ligne:
+        if e != 0:
+            result.append(e)
+    return result
 
 def _fusionner(ligne: List[int]) -> Tuple[List[int], int]:
     """
