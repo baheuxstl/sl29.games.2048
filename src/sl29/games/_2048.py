@@ -22,7 +22,7 @@ def nouvelle_partie() -> Tuple[List[List[int]], int]:
     grille2 = _ajouter_tuile(grille)
     grille3 = _ajouter_tuile(grille2)
     return (grille3, 0)
-    
+
 def jouer_coup(plateau: List[List[int]], direction: str) -> tuple[List[List[int]], int, bool]:
     """
     Effectuer un mouvement sur le plateau.
@@ -86,17 +86,13 @@ def _ajouter_tuile(plateau: List[List[int]]) -> List[List[int]]:
 
     nouveau_plateau = copy.deepcopy(plateau)
 
-    # Récupérer les cases vides
     cases_vides = _get_cases_vides(nouveau_plateau)
 
-    # S'il n'y a plus de place, on retourne le plateau tel quel
     if not cases_vides:
         return nouveau_plateau
 
-    # Choisir une case vide au hasard
     ligne, colonne = random.choice(cases_vides)
 
-    # Ajouter une tuile (2)
     nouveau_plateau[ligne][colonne] = 2
 
     return nouveau_plateau
@@ -147,20 +143,27 @@ def _completer_zeros(ligne): # ajouter les annotations de type
     DOCSTRING À ECIRE
     """
     return ligne + [0] * (TAILLE - len(ligne))
-    
-    raise NotImplementedError("Fonction _completer_zeros non implémentée.")
 
 def _deplacer_gauche(plateau) : # ajouter les annotations de type
     """
     DOCSTRING À ÉCRIRE
     """
-    raise NotImplementedError("Fonction _deplacer_gauche non implémentée.")
+    nouveau_plateau = []
+    nouveaux_points = 0
+
+    for ligne in plateau:
+        ligne_sans_zeros = _supprimer_zeros(ligne)
+        ligne_fusionnee, points = _fusionner(ligne_sans_zeros)
+        nouveaux_points = nouveaux_points + points
+        ligne_finale = _completer_zeros(ligne_fusionnee)
+        nouveau_plateau.append(ligne_finale)
+    return nouveau_plateau, nouveaux_points
 
 def _inverser_lignes(plateau): # ajouter les annotations de type
     """
     DOCSTRING À ÉCRIRE
     """
-    raise NotImplementedError("Fonction _inverser_lignes non implémentée.")
+    return [ligne[::-1]for ligne in plateau]
 
 def _deplacer_droite(plateau: List[List[int]]) -> Tuple[List[List[int]], int]:
     """
